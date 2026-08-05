@@ -1,0 +1,2039 @@
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local CloseButton = Instance.new("TextButton")
+local PortugueseButton = Instance.new("TextButton")
+local EnglishButton = Instance.new("TextButton")
+
+ScreenGui.Name = "LanguageSelector"
+ScreenGui.Parent = game:GetService("CoreGui")
+ScreenGui.ResetOnSpawn = false
+
+
+-- Janela principal
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+MainFrame.BorderSizePixel = 0
+MainFrame.Position = UDim2.new(0.5, -200, 0.5, -120)
+MainFrame.Size = UDim2.new(0, 400, 0, 240)
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+local Corner = Instance.new("UICorner")
+Corner.Parent = MainFrame
+Corner.CornerRadius = UDim.new(0, 15)
+
+
+-- Título
+Title.Parent = MainFrame
+Title.BackgroundTransparency = 1
+Title.Position = UDim2.new(0, 20, 0, 15)
+Title.Size = UDim2.new(1, -40, 0, 50)
+Title.Font = Enum.Font.GothamBold
+Title.Text = "Escolha seu país / Choose your country"
+Title.TextColor3 = Color3.fromRGB(255,255,255)
+Title.TextSize = 18
+
+
+-- Botão fechar
+CloseButton.Parent = MainFrame
+CloseButton.BackgroundColor3 = Color3.fromRGB(220,50,50)
+CloseButton.Position = UDim2.new(1,-45,0,10)
+CloseButton.Size = UDim2.new(0,35,0,35)
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255,255,255)
+CloseButton.TextSize = 18
+
+local CloseCorner = Instance.new("UICorner")
+CloseCorner.Parent = CloseButton
+CloseCorner.CornerRadius = UDim.new(0,8)
+
+
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+
+
+-- Botão Português
+PortugueseButton.Parent = MainFrame
+PortugueseButton.BackgroundColor3 = Color3.fromRGB(0,120,255)
+PortugueseButton.Position = UDim2.new(0,25,0,100)
+PortugueseButton.Size = UDim2.new(0,160,0,70)
+PortugueseButton.Font = Enum.Font.GothamBold
+PortugueseButton.Text = "🇧🇷\nPortuguês Brasil"
+PortugueseButton.TextColor3 = Color3.fromRGB(255,255,255)
+PortugueseButton.TextSize = 15
+
+local PtCorner = Instance.new("UICorner")
+PtCorner.Parent = PortugueseButton
+PtCorner.CornerRadius = UDim.new(0,12)
+
+
+
+-- Botão Inglês
+EnglishButton.Parent = MainFrame
+EnglishButton.BackgroundColor3 = Color3.fromRGB(40,170,80)
+EnglishButton.Position = UDim2.new(1,-185,0,100)
+EnglishButton.Size = UDim2.new(0,160,0,70)
+EnglishButton.Font = Enum.Font.GothamBold
+EnglishButton.Text = "🇺🇸\nEnglish"
+EnglishButton.TextColor3 = Color3.fromRGB(255,255,255)
+EnglishButton.TextSize = 15
+
+local EnCorner = Instance.new("UICorner")
+EnCorner.Parent = EnglishButton
+EnCorner.CornerRadius = UDim.new(0,12)
+
+
+
+-- Ações dos botões
+PortugueseButton.MouseButton1Click:Connect(function()
+    print("Idioma selecionado: Português Brasil")
+    local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local Lighting = game:GetService("Lighting")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+-- Variável para controlar se o menu está visível
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Carrega a biblioteca Redz UI Library
+local RedzLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/nhat0258/Redz-UI-Library/refs/heads/main/Main.lua"))()
+
+-- Cria a janela principal do Script
+local Window = RedzLib:MakeWindow({
+    Title = "Soilares Hub",
+    SubTitle = "Um script para MuBang(testes)",
+    SaveFolder = "Soilares_MuBangConfig.json"
+})
+
+Window:AddMinimizeButton({
+    Button = { Image = "rbxassetid://122035299832369", BackgroundTransparency = 0 },
+    Corner = { CornerRadius = UDim.new(35, 5) },
+})
+
+local InfoTab = Window:MakeTab({
+    Name = "Info ℹ️",
+    Icon = "info" -- Ícone padrão
+})
+
+InfoTab:AddParagraph({
+    Title = "\n Nome: Soilares Hub \n Versão : 1.1 ( Pode conter Bugs e etc ) \n Jogo: Mubang Game \n Feito em: Solarar v3"
+})
+
+-- Cria a aba "Comidas"
+local ComidasTab = Window:MakeTab({
+    Name = "Comidas 🎂",
+    Icon = "cake" -- Ícone padrão
+})
+
+-- Adiciona o texto explicativo dentro da aba Comidas
+ComidasTab:AddParagraph({
+    Title = "Aqui foi feito para pegar comidas que são precisos robux para desbloquear, mais aqui é gratis"
+})
+
+local textoDigitado = ""
+
+-- Cria o campo de digitação (TextBox)
+ComidasTab:AddTextBox({
+    Name = "Digite algo (voce pode pegar do DropDown) : ",
+    Default = "",
+    PlaceholderText = "Escreva o nome da comida que quer...",
+    Callback = function(texto)
+        textoDigitado = texto
+    end
+})
+
+-- Cria o botão que faz o print
+ComidasTab:AddButton({
+    Name = "pegar comida digitada",
+    Callback = function()
+        local args = {
+            {
+                textoDigitado
+            }
+        }
+        local remote = ReplicatedStorage:WaitForChild("PlaceFoodOrder")
+        remote:FireServer(unpack(args))
+
+    end
+})
+
+local listaDeComidas = {
+    "Seafood Boil", "Honey Seafood Boil", "Spicy Seafood Boil", 
+    "2x Spicy", "Gooey Brownie", "Gooey Velvet", "Gooey Dubai", 
+    "Gooey Vanilla", "Salmon Slab", "Tuna Slab", "Yellowtail Slab", 
+    "Kohada Slab", "Seabass Slab", "Organic Usuzukuri Slab", 
+    "Flounder Slab", "Usuzukuri Slab", "Spicy King Tentacle", "King Tentacle", "Flamin Hot Burger", "Takees Burger", "Blue Taki Burger", "Cookies N Cream Burger", "Matcha Burger", "Strawberry Burger", "2x Spicy Tteokbokki"
+} -- Guarda a comida padrão inicial
+
+-- 1. O Dropdown agora apenas atualiza a variável com o nome da comida
+ComidasTab:AddDropdown({
+    Name = "Selecione uma Comida Paga (pegar gratis):",
+    Options = listaDeComidas,
+    Default = "Seafood Boil",
+    Callback = function(comidaSelecionada)
+        comidaSelecionadaNaLista = comidaSelecionada
+        print("Comida selecionada no menu: " .. comidaSelecionada)
+    end
+})
+
+-- 2. O novo botão que realmente envia o pedido da comida que ficou salva na variável
+ComidasTab:AddButton({
+    Name = "Pegar Comida Selecionada",
+    Callback = function()
+        local remote = ReplicatedStorage:WaitForChild("PlaceFoodOrder")
+        remote:FireServer({comidaSelecionadaNaLista})
+        print("Pedido enviado via botão: " .. comidaSelecionadaNaLista)
+    end
+})
+
+local DivertidasTab = Window:MakeTab({
+    Name = "Coisas Divertidas 😀",
+    Icon = "mil" -- Ícone padrão
+})
+
+DivertidasTab:AddButton({
+    Name = "Quebrar paredes invisiveis e etc",
+    Callback = function()
+    -- Função ultra segura: deleta procurando diretamente pelo nome
+local function deletarBloqueios()
+    local deletouPart = false
+    local deletouBlocker = false
+
+    -- Varre absolutamente tudo dentro da pasta Workspace.Build
+    local buildFolder = workspace:FindFirstChild("Build") or workspace:FindFirstChild("build")
+    
+    if buildFolder then
+        for _, objeto in pairs(buildFolder:GetDescendants()) do
+            -- Verifica se encontrou a 'Part' que fica dentro de 'BLOCKER'
+            if objeto.Name == "Part" and objeto.Parent and objeto.Parent.Name == "BLOCKER" then
+                objeto:Destroy()
+                deletouPart = true
+            end
+            
+            -- Verifica se encontrou o 'Blocker' que fica dentro de 'ConvenienceS'
+            if objeto.Name == "Blocker" and objeto.Parent and objeto.Parent.Name == "ConvenienceS" then
+                objeto:Destroy()
+                deletouBlocker = true
+            end
+        end
+    end
+
+    -- Mostra o resultado real na tela para você saber se deu certo
+    if deletouPart or deletouBlocker then
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Limpeza Concluída",
+            Text = "Os bloqueios foram removidos com sucesso!",
+            Duration = 3
+        })
+    else
+        -- Aviso discreto caso o jogo já tenha deletado ou mudado o nome das pastas
+        print("Avisos de caminho ignorados. Objetos já limpos ou não gerados.")
+    end
+end
+
+-- Executa a limpeza direto
+deletarBloqueios()
+    end
+})
+
+
+
+
+
+
+
+
+-- Botão para clonar qualquer objeto com o formato original idêntico
+-- Novo Transmutador que preserva o som de comer
+DivertidasTab:AddButton({
+    Name = "Objeto virar comida(Usa o 1º Item do Inventário)",
+    Callback = function()
+        local player = game:GetService("Players").LocalPlayer
+        local mouse = player:GetMouse()
+        local character = player.Character
+        local backpack = player:FindFirstChild("Backpack")
+        
+        -- 1. Encontra de forma inteligente qualquer ferramenta equipada na mão primeiro
+        local tool = character and character:FindFirstChildWhichIsA("Tool")
+        
+        -- 2. Se não estiver na mão, pega a primeiríssima ferramenta que estiver na Backpack
+        if not tool and backpack then
+            tool = backpack:FindFirstChildWhichIsA("Tool")
+        end
+        
+        -- Se o jogador estiver com o inventário 100% vazio
+        if not tool then
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "Erro",
+                Text = "Pegue ou compre qualquer comida primeiro!",
+                Duration = 3
+            })
+            return
+        end
+        
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Transmutar Universal",
+            Text = "Usando: " .. tool.Name .. ".\nClique em um objeto do mapa!",
+            Duration = 4
+        })
+        
+        local conexao
+        conexao = mouse.Button1Down:Connect(function()
+            local alvo = mouse.Target
+            
+            if alvo and alvo:IsA("BasePart") and alvo.Name ~= "Terrain" then
+                conexao:Disconnect()
+                
+                local antigoHandle = tool:FindFirstChild("Handle")
+                local somComer = nil
+                
+                -- Se o Handle antigo existir, salva o som dele (independente do nome) antes de deletar
+                if antigoHandle then
+                    somComer = antigoHandle:FindFirstChildWhichIsA("Sound")
+                    if somComer then
+                        somComer.Parent = tool
+                    end
+                    antigoHandle:Destroy()
+                end
+                
+                if not somComer then
+                    somComer = tool:FindFirstChildWhichIsA("Sound")
+                end
+                
+                -- Clona o formato do objeto clicado
+                local novoHandle = alvo:Clone()
+                novoHandle.Name = "Handle"
+                novoHandle.CanCollide = false
+                novoHandle.Anchored = false 
+                novoHandle.CFrame = CFrame.new(0, 0, 0)
+                novoHandle.Parent = tool
+                
+                -- Devolve o som de comer original daquela comida específica para o novo Handle
+                if somComer then
+                    somComer.Parent = novoHandle
+                end
+                
+                game:GetService("StarterGui"):SetCore("SendNotification", {
+                    Title = "Sucesso! 🍽️",
+                    Text = "Objeto injetado em: " .. tool.Name .. "! Reequipe o item.",
+                    Duration = 3
+                })
+            end
+        end)
+    end
+})
+
+DivertidasTab:AddButton({
+    Name = "Abrir Gui De Exercito de gatos",
+    Callback = function()
+    -- INTERFACE GRÁFICA ATUALIZADA (SEM ERROS DE SINTAXE)
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local TitleLabel = Instance.new("TextLabel")
+local BtnClose = Instance.new("TextButton")
+local ControlFrame = Instance.new("Frame")
+local BtnMinus = Instance.new("TextButton")
+local BtnPlus = Instance.new("TextButton")
+local QuantityLabel = Instance.new("TextLabel")
+
+-- SEÇÃO DA LISTA DE GATOS
+local CatListFrame = Instance.new("Frame")
+local CatListTitle = Instance.new("TextLabel")
+local BtnCatButter = Instance.new("TextButton")
+local BtnCatBred = Instance.new("TextButton")
+local BtnCatCheese = Instance.new("TextButton")
+local BtnCatWhite = Instance.new("TextButton")
+
+-- SEÇÃO DE SELEÇÃO DE MODO
+local ModeFrame = Instance.new("Frame")
+local ModeTitle = Instance.new("TextLabel")
+local BtnModeHorizontal = Instance.new("TextButton")
+local BtnModeVertical = Instance.new("TextButton")
+local BtnStart = Instance.new("TextButton")
+
+-- CONFIGURAÇÃO PRINCIPAL DA JANELA
+ScreenGui.Name = "ExercitoGatosGuiV2"
+ScreenGui.Parent = game:GetService("CoreGui") or game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ResetOnSpawn = false
+
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+MainFrame.BorderSizePixel = 0
+MainFrame.Position = UDim2.new(0.05, 0, 0.3, 0)
+MainFrame.Size = UDim2.new(0, 240, 0, 420)
+MainFrame.Active = true
+MainFrame.Draggable = true
+Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 10)
+
+TitleLabel.Name = "TitleLabel"
+TitleLabel.Parent = MainFrame
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Position = UDim2.new(0, 10, 0, 0)
+TitleLabel.Size = UDim2.new(1, -50, 0, 40)
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.Text = "EXÉRCITO DE GATOS"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 215, 0)
+TitleLabel.TextSize = 14
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+-- BOTÃO PARA DELETAR A GUI (X)
+BtnClose.Name = "BtnClose"
+BtnClose.Parent = MainFrame
+BtnClose.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
+BtnClose.Position = UDim2.new(1, -35, 0, 8)
+BtnClose.Size = UDim2.new(0, 25, 0, 25)
+BtnClose.Font = Enum.Font.GothamBold
+BtnClose.Text = "X"
+BtnClose.TextColor3 = Color3.fromRGB(255, 255, 255)
+BtnClose.TextSize = 14
+Instance.new("UICorner", BtnClose).CornerRadius = UDim.new(0, 5)
+
+BtnClose.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+-- SEÇÃO DE QUANTIDADE (+ e -)
+ControlFrame.Name = "ControlFrame"
+ControlFrame.Parent = MainFrame
+ControlFrame.BackgroundTransparency = 1
+ControlFrame.Position = UDim2.new(0, 10, 0, 45)
+ControlFrame.Size = UDim2.new(1, -20, 0, 45)
+
+BtnMinus.Parent = ControlFrame
+BtnMinus.BackgroundColor3 = Color3.fromRGB(180, 50, 50)
+BtnMinus.Size = UDim2.new(0, 35, 0, 35)
+BtnMinus.Font = Enum.Font.GothamBold
+BtnMinus.Text = "-"
+BtnMinus.TextColor3 = Color3.fromRGB(255, 255, 255)
+BtnMinus.TextSize = 20
+Instance.new("UICorner", BtnMinus).CornerRadius = UDim.new(0, 5)
+
+QuantityLabel.Parent = ControlFrame
+QuantityLabel.BackgroundTransparency = 1
+QuantityLabel.Position = UDim2.new(0, 45, 0, 0)
+QuantityLabel.Size = UDim2.new(1, -90, 0, 35)
+QuantityLabel.Font = Enum.Font.GothamBold
+QuantityLabel.Text = "Gatos: 3"
+QuantityLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+QuantityLabel.TextSize = 16
+
+BtnPlus.Parent = ControlFrame
+BtnPlus.BackgroundColor3 = Color3.fromRGB(50, 160, 50)
+BtnPlus.Position = UDim2.new(1, -35, 0, 0)
+BtnPlus.Size = UDim2.new(0, 35, 0, 35)
+BtnPlus.Font = Enum.Font.GothamBold
+BtnPlus.Text = "+"
+BtnPlus.TextColor3 = Color3.fromRGB(255, 255, 255)
+BtnPlus.TextSize = 20
+Instance.new("UICorner", BtnPlus).CornerRadius = UDim.new(0, 5)
+
+-- MENU: SELEÇÃO DA ESPÉCIE DO GATO
+CatListFrame.Name = "CatListFrame"
+CatListFrame.Parent = MainFrame
+CatListFrame.BackgroundTransparency = 1
+CatListFrame.Position = UDim2.new(0, 10, 0, 95)
+CatListFrame.Size = UDim2.new(1, -20, 0, 140)
+
+CatListTitle.Parent = CatListFrame
+CatListTitle.BackgroundTransparency = 1
+CatListTitle.Size = UDim2.new(1, 0, 0, 20)
+CatListTitle.Font = Enum.Font.GothamSemibold
+CatListTitle.Text = "Escolha a Espécie:"
+CatListTitle.TextColor3 = Color3.fromRGB(200, 200, 200)
+CatListTitle.TextSize = 13
+CatListTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local function estilizarBotaoGato(btn, texto, pos)
+    btn.Parent = CatListFrame
+    btn.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+    btn.Position = pos
+    btn.Size = UDim2.new(1, 0, 0, 24)
+    btn.Font = Enum.Font.Gotham
+    btn.Text = texto
+    btn.TextColor3 = Color3.fromRGB(180, 180, 180)
+    btn.TextSize = 13
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 4)
+end
+
+estilizarBotaoGato(BtnCatButter, "Butter Cat", UDim2.new(0, 0, 0, 25))
+estilizarBotaoGato(BtnCatBred, "Bred Cat", UDim2.new(0, 0, 0, 53))
+estilizarBotaoGato(BtnCatCheese, "Cheese Cat", UDim2.new(0, 0, 0, 81))
+estilizarBotaoGato(BtnCatWhite, "White Cat", UDim2.new(0, 0, 0, 109))
+
+-- SEÇÃO DE SELEÇÃO DE FORMAÇÃO
+ModeFrame.Name = "ModeFrame"
+ModeFrame.Parent = MainFrame
+ModeFrame.BackgroundTransparency = 1
+ModeFrame.Position = UDim2.new(0, 10, 0, 245)
+ModeFrame.Size = UDim2.new(1, -20, 0, 90)
+
+ModeTitle.Parent = ModeFrame
+ModeTitle.BackgroundTransparency = 1
+ModeTitle.Size = UDim2.new(1, 0, 0, 20)
+ModeTitle.Font = Enum.Font.GothamSemibold
+ModeTitle.Text = "Formação da Fila:"
+ModeTitle.TextColor3 = Color3.fromRGB(200, 200, 200)
+ModeTitle.TextSize = 13
+ModeTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+BtnModeVertical.Parent = ModeFrame
+BtnModeVertical.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+BtnModeVertical.Position = UDim2.new(0, 0, 0, 25)
+BtnModeVertical.Size = UDim2.new(1, 0, 0, 26)
+BtnModeVertical.Font = Enum.Font.Gotham
+BtnModeVertical.Text = "Fila Vertical"
+BtnModeVertical.TextColor3 = Color3.fromRGB(255, 255, 255)
+BtnModeVertical.TextSize = 13
+Instance.new("UICorner", BtnModeVertical).CornerRadius = UDim.new(0, 4)
+
+BtnModeHorizontal.Parent = ModeFrame
+BtnModeHorizontal.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+BtnModeHorizontal.Position = UDim2.new(0, 0, 0, 55)
+BtnModeHorizontal.Size = UDim2.new(1, 0, 0, 26)
+BtnModeHorizontal.Font = Enum.Font.Gotham
+BtnModeHorizontal.Text = "Fila Horizontal (Deitada)"
+BtnModeHorizontal.TextColor3 = Color3.fromRGB(180, 180, 180)
+BtnModeHorizontal.TextSize = 13
+Instance.new("UICorner", BtnModeHorizontal).CornerRadius = UDim.new(0, 4)
+
+-- BOTÃO PRINCIPAL INICIAR
+BtnStart.Parent = MainFrame
+BtnStart.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
+BtnStart.Position = UDim2.new(0, 10, 1, -45)
+BtnStart.Size = UDim2.new(1, -20, 0, 35)
+BtnStart.Font = Enum.Font.GothamBold
+BtnStart.Text = "INICIAR EXÉRCITO"
+BtnStart.TextColor3 = Color3.fromRGB(35, 35, 45)
+BtnStart.TextSize = 14
+Instance.new("UICorner", BtnStart).CornerRadius = UDim.new(0, 6)
+
+
+-- CONTROLADORES LÓGICOS DO SCRIPT
+local quantidadeGatos = 3
+local modoSelecionado = "Vertical"
+local gatoSelecionado = "Butter Cat"
+
+local function resetarCoresListaGatos()
+    local cinza = Color3.fromRGB(50, 50, 60)
+    local textoCinza = Color3.fromRGB(180, 180, 180)
+    BtnCatButter.BackgroundColor3 = cinza; BtnCatButter.TextColor3 = textoCinza
+    BtnCatBred.BackgroundColor3 = cinza; BtnCatBred.TextColor3 = textoCinza
+    BtnCatCheese.BackgroundColor3 = cinza; BtnCatCheese.TextColor3 = textoCinza
+    BtnCatWhite.BackgroundColor3 = cinza; BtnCatWhite.TextColor3 = textoCinza
+end
+
+local function selecionarGato(btn, nome)
+    gatoSelecionado = nome
+    resetarCoresListaGatos()
+    btn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+end
+
+BtnCatButter.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+BtnCatButter.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+BtnCatButter.MouseButton1Click:Connect(function() selecionarGato(BtnCatButter, "Butter Cat") end)
+BtnCatBred.MouseButton1Click:Connect(function() selecionarGato(BtnCatBred, "Bred Cat") end)
+BtnCatCheese.MouseButton1Click:Connect(function() selecionarGato(BtnCatCheese, "Cheese Cat") end)
+BtnCatWhite.MouseButton1Click:Connect(function() selecionarGato(BtnCatWhite, "White Cat") end)
+
+BtnPlus.MouseButton1Click:Connect(function()
+    quantidadeGatos = quantidadeGatos + 1
+    QuantityLabel.Text = "Gatos: " .. quantidadeGatos
+end)
+
+BtnMinus.MouseButton1Click:Connect(function()
+    if quantidadeGatos > 1 then
+        quantidadeGatos = quantidadeGatos - 1
+        QuantityLabel.Text = "Gatos: " .. quantidadeGatos
+    end
+end)
+
+BtnModeVertical.MouseButton1Click:Connect(function()
+    modoSelecionado = "Vertical"
+    BtnModeVertical.BackgroundColor3 = Color3.fromRGB(0, 120, 255); BtnModeVertical.TextColor3 = Color3.fromRGB(255, 255, 255)
+    BtnModeHorizontal.BackgroundColor3 = Color3.fromRGB(50, 50, 60); BtnModeHorizontal.TextColor3 = Color3.fromRGB(180, 180, 180)
+end)
+
+BtnModeHorizontal.MouseButton1Click:Connect(function()
+    modoSelecionado = "Horizontal"
+    BtnModeHorizontal.BackgroundColor3 = Color3.fromRGB(0, 120, 255); BtnModeHorizontal.TextColor3 = Color3.fromRGB(255, 255, 255)
+    BtnModeVertical.BackgroundColor3 = Color3.fromRGB(50, 50, 60); BtnModeVertical.TextColor3 = Color3.fromRGB(180, 180, 180)
+end)
+
+-- DISPARADOR DO BOTÃO START COM O SEU TRECHO DE CÓDIGO FECHADO CORRETAMENTE
+BtnStart.MouseButton1Click:Connect(function()
+    local Players = game:GetService("Players")
+    local Workspace = game:GetService("Workspace")
+    local localPlayer = Players.LocalPlayer
+    local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+    local rootPart = character:WaitForChild("HumanoidRootPart")
+
+    for _, v in ipairs(Workspace:GetChildren()) do
+        if v.Name == "Gato_Exercito_GUI" then v:Destroy() end
+    end
+
+    local pastaAlvo = Workspace:FindFirstChild("build") and Workspace.build:FindFirstChild("private rooms")
+    if not pastaAlvo then return end
+
+    local originalModel = pastaAlvo:FindFirstChild(gatoSelecionado)
+    if not originalModel then
+    warn("O gato '" .. gatoSelecionado .. "' nao foi encontrado na pasta private rooms!")
+    return
+end
+
+for i = 0, (quantidadeGatos - 1) do
+    local cloneGato = originalModel:Clone()
+    cloneGato.Name = "Gato_Exercito_GUI"
+    
+    local gatoRoot = cloneGato:IsA("Model") and (cloneGato.PrimaryPart or cloneGato:FindFirstChildWhichIsA("BasePart")) or cloneGato
+    if not gatoRoot then continue end
+
+    local deslocamentoX, deslocamentoZ
+    
+    if modoSelecionado == "Vertical" then
+        local posicaoNaFila = i % 3
+        local numeroDaFilaLateral = math.floor(i / 3)
+        deslocamentoX = numeroDaFilaLateral * 2.5
+        deslocamentoZ = 3 + (posicaoNaFila * 3)
+    else
+        local posicaoHorizontal = i % 3
+        local fileiraTraseira = math.floor(i / 3)
+        deslocamentoX = (posicaoHorizontal - 1) * 2.5
+        deslocamentoZ = 3 + (fileiraTraseira * 3)
+    end
+
+    gatoRoot.CFrame = rootPart.CFrame * CFrame.new(deslocamentoX, 0, deslocamentoZ)
+    cloneGato.Parent = Workspace
+
+    for _, part in ipairs(cloneGato:GetDescendants()) do
+        if part:IsA("BasePart") then part.CanCollide = false end
+    end
+
+    local attachmentGato = Instance.new("Attachment", gatoRoot)
+    local attachmentPlayer = Instance.new("Attachment", rootPart)
+    attachmentPlayer.Position = Vector3.new(deslocamentoX, -1, deslocamentoZ)
+
+    local alinhamento = Instance.new("AlignPosition")
+    alinhamento.MaxForce = 50000
+    alinhamento.Responsiveness = 15
+    alinhamento.Attachment0 = attachmentGato
+    alinhamento.Attachment1 = attachmentPlayer
+    alinhamento.Parent = gatoRoot
+
+    local orientacao = Instance.new("AlignOrientation")
+    orientacao.MaxTorque = 50000
+    orientacao.Responsiveness = 15
+    orientacao.Attachment0 = attachmentGato
+    orientacao.Attachment1 = attachmentPlayer
+    orientacao.Parent = gatoRoot
+end
+
+print("Exercito iniciado com " .. quantidadeGatos .. "x " .. gatoSelecionado .. " em formato " .. modoSelecionado)
+end)
+
+end
+})
+
+
+DivertidasTab:AddTextBox({
+    Name = "Digite algo: ",
+    Default = "",
+    PlaceholderText = "Escreva o quanto de comidas voce ficara (VISUAL)",
+    Callback = function(texto)
+        Numero = texto
+    end
+})
+
+-- Cria o botão que faz o print
+DivertidasTab:AddButton({
+    Name = "Ficar com mordidas (VISUAL)",
+    Callback = function()
+        local caminho = game.Players.LocalPlayer:WaitForChild("leaderstats"):WaitForChild("Bites")
+
+caminho.Value = Numero
+    end
+})
+
+DivertidasTab:AddTextBox({
+    Name = "Digite algo: ",
+    Default = "",
+    PlaceholderText = "Escreva o quanto de dinheiro voce ficara (VISUAL)",
+    Callback = function(texto)
+        NumeroH = texto
+    end
+})
+
+-- Cria o botão que faz o print
+DivertidasTab:AddButton({
+    Name = "Ficar com dinheiro (VISUAL)",
+    Callback = function()
+        local caminhoH = game.Players.LocalPlayer:WaitForChild("leaderstats"):WaitForChild("Cash")
+
+caminhoH.Value = NumeroH
+    end
+})
+
+
+local UltilidadesTab = Window:MakeTab({
+    Name = "⚙️ Utilidades",
+    Icon = "nil" -- Ícone padrão
+})
+
+UltilidadesTab:AddButton({
+    Name = "Comer sua primeira comida do inventario ( Para chegar em top global )",
+    Callback = function()
+            local player = game:GetService("Players").LocalPlayer
+        local mouse = player:GetMouse()
+        local character = player.Character
+        local backpack = player:FindFirstChild("Backpack")
+        
+        -- 1. Encontra de forma inteligente qualquer ferramenta equipada na mão primeiro
+        local tool = character and character:FindFirstChildWhichIsA("Tool")
+        
+        -- 2. Se não estiver na mão, pega a primeiríssima ferramenta que estiver na Backpack
+        if not tool and backpack then
+            tool = backpack:FindFirstChildWhichIsA("Tool")
+        end
+        
+        -- Se o jogador estiver com o inventário 100% vazio
+        if not tool then
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "Erro",
+                Text = "Pegue ou compre qualquer comida primeiro!",
+                Duration = 3
+            })
+            return
+        end
+        
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Comer automatico",
+            Text = "Usando: " .. tool.Name .. "ok",
+            Duration = 4
+        })
+local toless = tool.Name
+
+while wait(0) do
+       local args = {
+    {
+        CheesePull = false,
+        FoodType = "DrumStick",
+        Action = "Bite",
+        Tool = game:GetService("Players").LocalPlayer.Character:WaitForChild(toless),
+        Bite = 1
+    }
+}
+        local remote = ReplicatedStorage:WaitForChild("DrumstickEvent")
+        remote:FireServer(unpack(args))
+        end
+    end
+})
+
+
+UltilidadesTab:AddTextBox({
+    Name = "Digite algo: ",
+    Default = "",
+    PlaceholderText = "Escreva a sua velocidade",
+    Callback = function(texto)
+        NumeroJ = texto
+    end
+})
+
+
+
+
+-- Cria o botão que faz o print
+UltilidadesTab:AddButton({
+    Name = "Ficar com Velocidade",
+    Callback = function()
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = NumeroJ
+    end
+})
+
+UltilidadesTab:AddTextBox({
+    Name = "Digite algo: ",
+    Default = "",
+    PlaceholderText = "Escreva o seu Poder de pulo",
+    Callback = function(texto)
+        NumeroW = texto
+    end
+})
+
+-- Cria o botão que faz o print
+UltilidadesTab:AddButton({
+    Name = "Ficar com Poder de pulo",
+    Callback = function()
+        game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid").JumpHeight = NumeroW
+    end
+})
+
+UltilidadesTab:AddTextBox({
+    Name = "Digite algo: ",
+    Default = "",
+    PlaceholderText = "Escreva a sua gravidade",
+    Callback = function(texto)
+        NumeroP = texto
+    end
+})
+
+-- Cria o botão que faz o print
+UltilidadesTab:AddButton({
+    Name = "Ficar com a gravidade",
+    Callback = function()
+        Workspace.Gravity = NumeroP
+    end
+})
+
+UltilidadesTab:AddButton({
+    Name = "Ativar Esp",
+    Callback = function()
+        local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+_G.ESP_Ativo = true
+
+local function criarHighlight(char)
+	if not char:FindFirstChild("ESPHighlight") then
+		local highlight = Instance.new("Highlight")
+		highlight.Name = "ESPHighlight"
+		highlight.FillColor = Color3.fromRGB(255, 0, 0)
+		highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+		highlight.FillTransparency = 0.5 -- Corrigido aqui
+		highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+		highlight.Parent = char
+	end
+end
+
+for _, jogador in ipairs(Players:GetPlayers()) do
+	if jogador ~= LocalPlayer and jogador.Character then
+		criarHighlight(jogador.Character)
+	end
+end
+
+if not _G.ESP_Conectado then
+	_G.ESP_Conectado = true
+	Players.PlayerAdded:Connect(function(jogador)
+		jogador.CharacterAdded:Connect(function(char)
+			task.wait(1)
+			if _G.ESP_Ativo and jogador ~= LocalPlayer then
+				criarHighlight(char)
+			end
+		end)
+	end)
+
+	for _, jogador in ipairs(Players:GetPlayers()) do
+		if jogador ~= LocalPlayer then
+			jogador.CharacterAdded:Connect(function(char)
+				task.wait(1)
+				if _G.ESP_Ativo then criarHighlight(char) end
+			end)
+		end
+	end
+end
+
+    end
+})
+
+UltilidadesTab:AddButton({
+    Name = "Desativar Esp",
+    Callback = function()
+        local Players = game:GetService("Players")
+
+_G.ESP_Ativo = false
+
+for _, jogador in ipairs(Players:GetPlayers()) do
+	if jogador.Character and jogador.Character:FindFirstChild("ESPHighlight") then
+		jogador.Character.ESPHighlight:Destroy()
+	end
+end
+
+    end
+})
+
+local function obterListaJogadores()
+    local lista = {}
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            table.insert(lista, player.Name)
+        end
+    end
+    return lista
+end
+
+local PlayerDropdown = UltilidadesTab:AddDropdown({
+    Name = "Lista de Pessoas",
+    Options = obterListaJogadores(),
+    Default = "",
+    Callback = function(Value)
+        jogadorSelecionado = Value
+    end
+})
+
+UltilidadesTab:AddButton({"Shaders", function()
+    local Lighting = game:GetService("Lighting")
+    local RunService = game:GetService("RunService")
+
+    -- Mantem a tecnologia de sombras bonita
+    Lighting.Technology = Enum.Technology.Future
+    Lighting.ShadowSoftness = 0.1
+    Lighting.EnvironmentDiffuseScale = 1
+    Lighting.EnvironmentSpecularScale = 1
+    Lighting.GlobalShadows = true
+
+    -- Limpa os efeitos antigos para nao acumular
+    for _, efeito in pairs(Lighting:GetChildren()) do
+        if efeito:IsA("PostEffect") or efeito:IsA("Atmosphere") or efeito:IsA("Sky") then
+            efeito:Destroy()
+        end
+    end
+
+    -- 1. Atmosfera Suave (Mantem o entardecer bonito sem cegar)
+    local Atmosfera = Instance.new("Atmosphere")
+    Atmosfera.Density = 0.25
+    Atmosfera.Offset = 0.15
+    Atmosfera.Color = Color3.fromRGB(240, 220, 190) 
+    Atmosfera.Decay = Color3.fromRGB(230, 170, 120) 
+    Atmosfera.Glare = 0.35  
+    Atmosfera.Haze = 1.1    
+    Atmosfera.Parent = Lighting
+
+    -- 2. Correcao de Cores Equilibrada
+    local ColorCorrection = Instance.new("ColorCorrectionEffect")
+    ColorCorrection.Brightness = 0.05  
+    ColorCorrection.Contrast = 0.15    
+    ColorCorrection.Saturation = 0.15  
+    ColorCorrection.Parent = Lighting
+
+    -- 3. Bloom Controlado (Faz o sol vazar as cores de forma transparente)
+    local Bloom = Instance.new("BloomEffect")
+    Bloom.Intensity = 0.8       
+    Bloom.Size = 24             
+    Bloom.Threshold = 0.75      
+    Bloom.Parent = Lighting
+
+    -- 4. Raios Solares Elegantes (SunRays)
+    local SunRays = Instance.new("SunRaysEffect")
+    SunRays.Intensity = 0.2     
+    SunRays.Spread = 0.6       
+    SunRays.Parent = Lighting
+
+    -- 5. Blur de Profundidade Cinematico
+    local DepthOfField = Instance.new("DepthOfFieldEffect")
+    DepthOfField.FarIntensity = 0.3
+    DepthOfField.FocusDistance = 40
+    DepthOfField.InFocusRadius = 50
+    DepthOfField.NearIntensity = 0.05
+    DepthOfField.Parent = Lighting
+
+    -- Loop continuo que mantem o visual firme respeitando o horario do servidor
+    RunService.RenderStepped:Connect(function()
+        Lighting.Brightness = 2.8  
+        Lighting.ExposureCompensation = 0.2 
+        Lighting.OutdoorAmbient = Color3.fromRGB(130, 140, 150)
+        Lighting.Ambient = Color3.fromRGB(45, 45, 50)
+    end)
+end})
+
+
+UltilidadesTab:AddButton({
+    Name = "🔄 Atualizar Lista de Pessoas",
+    Callback = function()
+        PlayerDropdown:Refresh(obterListaJogadores(), true)
+    end
+})
+
+UltilidadesTab:AddToggle({
+    Name = "View Camera Pessoas",
+    Default = false,
+    Callback = function(Value)
+        espectando = Value
+        local camera = Workspace.CurrentCamera
+        
+        if espectando then
+            local alvo = Players:FindFirstChild(jogadorSelecionado)
+            if alvo and alvo.Character and alvo.Character:FindFirstChild("Humanoid") then
+                camera.CameraSubject = alvo.Character.Humanoid
+                
+                conexaoEspectar = alvo.CharacterAdded:Connect(function(novoCharacter)
+                    local humanoid = novoCharacter:WaitForChild("Humanoid", 5)
+                    if humanoid and espectando then
+                        camera.CameraSubject = humanoid
+                    end
+                end)
+            else
+                print("Selecione um jogador válido na lista antes de ativar.")
+            end
+        else
+            if conexaoEspectar then
+                conexaoEspectar:Disconnect()
+                conexaoEspectar = nil
+            end
+            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+                camera.CameraSubject = LocalPlayer.Character.Humanoid
+            end
+        end
+    end
+})
+
+UltilidadesTab:AddToggle({
+    Name = "Teleporte para as pessoas",
+    Default = false,
+    Callback = function(Value)
+        if Value then
+            local alvo = Players:FindFirstChild(jogadorSelecionado)
+            local meuRoot = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            local alvoRoot = alvo and alvo.Character and alvo.Character:FindFirstChild("HumanoidRootPart")
+            
+            if meuRoot and alvoRoot then
+                meuRoot.CFrame = alvoRoot.CFrame * CFrame.new(0, 2, 0)
+            end
+        end
+    end
+})
+
+local InfiniteJumpEnabled = false
+local JumpConnection = nil
+
+UltilidadesTab:AddToggle({"Pulo Infinito", false, function(Value)
+    InfiniteJumpEnabled = Value
+    
+    -- Ativa o sistema apenas quando o Toggle for ligado
+    if InfiniteJumpEnabled and not JumpConnection then
+        local UserInputService = game:GetService("UserInputService")
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+
+        JumpConnection = UserInputService.JumpRequest:Connect(function()
+            if InfiniteJumpEnabled then
+                local character = LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChildOfClass("Humanoid")
+                    if humanoid then
+                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                    end
+                end
+            end
+        end)
+    end
+end})
+
+local NewTab = Window:MakeTab({
+    Name = "✉️ Novidades",
+    Icon = "Cred" -- Ícone padrão
+})
+
+NewTab:AddParagraph({
+    Title = "Novas comidas no Dropdown de comidas"
+})
+
+
+
+NewTab:AddParagraph({
+    Title = "Foi isso por hoje, em breve tera mais"
+})
+
+local CredTab = Window:MakeTab({
+    Name = "✉️ Creditos",
+    Icon = "Cred" -- Ícone padrão
+})
+
+CredTab:AddParagraph({
+    Title = "Criador: Juan"
+})
+
+CredTab:AddParagraph({
+    Title = "Ferramentas Usadas: Dex, Infinite Yield, Pastefy, WeAreDevs, Solarar V3 e Simples Spy"
+})
+
+CredTab:AddParagraph({
+    Title = "Lingua: Portugues do Brasil"
+})
+
+CredTab:AddParagraph({
+    Title = "Espero que aproveite o Hub :)"
+})
+    ScreenGui:Destroy()
+end)
+
+
+EnglishButton.MouseButton1Click:Connect(function()
+    print("Language selected: English")
+    local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local Lighting = game:GetService("Lighting")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+-- Variable to control whether the menu is visible
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Loads the Redz UI Library
+local RedzLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/nhat0258/Redz-UI-Library/refs/heads/main/Main.lua"))()
+
+-- Creates the main Script window
+local Window = RedzLib:MakeWindow({
+    Title = "Soilares Hub",
+    SubTitle = "A script for MuBang (tests)",
+    SaveFolder = "Soilares_MuBangConfig.json"
+})
+
+Window:AddMinimizeButton({
+    Button = { Image = "rbxassetid://122035299832369", BackgroundTransparency = 0 },
+    Corner = { CornerRadius = UDim.new(35, 5) },
+})
+
+local InfoTab = Window:MakeTab({
+    Name = "Info ℹ️",
+    Icon = "info" -- Default icon
+})
+
+InfoTab:AddParagraph({
+    Title = "\n Name: Soilares Hub \n Version: 1.1 (May contain bugs, etc.) \n Game: Mubang Game \n Made with: Solarar v3"
+})
+
+-- Creates the "Food" tab
+local ComidasTab = Window:MakeTab({
+    Name = "Food 🎂",
+    Icon = "cake" -- Default icon
+})
+
+-- Adds the explanation text inside the Food tab
+ComidasTab:AddParagraph({
+    Title = "This was made to get foods that require Robux to unlock, but here they are free"
+})
+
+local textoDigitado = ""
+
+-- Creates the text input box
+ComidasTab:AddTextBox({
+    Name = "Type something (you can get it from the Dropdown): ",
+    Default = "",
+    PlaceholderText = "Write the name of the food you want...",
+    Callback = function(texto)
+        textoDigitado = texto
+    end
+})
+
+-- Creates the button that gets the typed food
+ComidasTab:AddButton({
+    Name = "Get typed food",
+    Callback = function()
+        local args = {
+            {
+                textoDigitado
+            }
+        }
+        local remote = ReplicatedStorage:WaitForChild("PlaceFoodOrder")
+        remote:FireServer(unpack(args))
+
+    end
+})
+
+local listaDeComidas = {
+    "Seafood Boil", "Honey Seafood Boil", "Spicy Seafood Boil", 
+    "2x Spicy", "Gooey Brownie", "Gooey Velvet", "Gooey Dubai", 
+    "Gooey Vanilla", "Salmon Slab", "Tuna Slab", "Yellowtail Slab", 
+    "Kohada Slab", "Seabass Slab", "Organic Usuzukuri Slab", 
+    "Flounder Slab", "Usuzukuri Slab", "Spicy King Tentacle", "King Tentacle", "Flamin Hot Burger", "Takees Burger", "Blue Taki Burger", "Cookies N Cream Burger", "Matcha Burger", "Strawberry Burger", "2x Spicy Tteokbokki"
+} -- Saves the default food list
+
+-- 1. The Dropdown only updates the variable with the selected food name
+ComidasTab:AddDropdown({
+    Name = "Select a Paid Food (get it free):",
+    Options = listaDeComidas,
+    Default = "Seafood Boil",
+    Callback = function(comidaSelecionada)
+        comidaSelecionadaNaLista = comidaSelecionada
+        print("Food selected in menu: " .. comidaSelecionada)
+    end
+})
+
+-- 2. The new button that sends the saved food request
+ComidasTab:AddButton({
+    Name = "Get Selected Food",
+    Callback = function()
+        local remote = ReplicatedStorage:WaitForChild("PlaceFoodOrder")
+        remote:FireServer({comidaSelecionadaNaLista})
+        print("Request sent by button: " .. comidaSelecionadaNaLista)
+    end
+})
+
+local DivertidasTab = Window:MakeTab({
+    Name = "Funny Things 😀",
+    Icon = "mil" -- Default icon
+})
+
+DivertidasTab:AddButton({
+    Name = "Break invisible walls and etc.",
+    Callback = function()
+    -- Ultra safe function: deletes by directly searching by name
+local function deleteBlockers()
+    local deletedPart = false
+    local deletedBlocker = false
+
+    -- Scans absolutely everything inside the Workspace.Build folder
+    local buildFolder = workspace:FindFirstChild("Build") or workspace:FindFirstChild("build")
+    
+    if buildFolder then
+        for _, object in pairs(buildFolder:GetDescendants()) do
+            -- Checks if it found the 'Part' inside 'BLOCKER'
+            if object.Name == "Part" and object.Parent and object.Parent.Name == "BLOCKER" then
+                object:Destroy()
+                deletedPart = true
+            end
+            
+            -- Checks if it found the 'Blocker' inside 'ConvenienceS'
+            if object.Name == "Blocker" and object.Parent and object.Parent.Name == "ConvenienceS" then
+                object:Destroy()
+                deletedBlocker = true
+            end
+        end
+    end
+
+    -- Shows the real result on screen so you know if it worked
+    if deletedPart or deletedBlocker then
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Cleanup Completed",
+            Text = "The blockers were successfully removed!",
+            Duration = 3
+        })
+    else
+        -- Discreet warning if the game already deleted it or changed folder names
+        print("Path warnings ignored. Objects already cleaned or not generated.")
+    end
+end
+
+-- Executes the cleanup directly
+deleteBlockers()
+    end
+})
+
+-- Button to clone any object with the exact original shape
+-- New Transmuter that preserves the eating sound
+DivertidasTab:AddButton({
+    Name = "Turn object into food (Uses 1st Inventory Item)",
+    Callback = function()
+        local player = game:GetService("Players").LocalPlayer
+        local mouse = player:GetMouse()
+        local character = player.Character
+        local backpack = player:FindFirstChild("Backpack")
+        
+        -- 1. Smartly finds any equipped tool in the player's hand first
+        local tool = character and character:FindFirstChildWhichIsA("Tool")
+        
+        -- 2. If not in hand, gets the first tool found in the Backpack
+        if not tool and backpack then
+            tool = backpack:FindFirstChildWhichIsA("Tool")
+        end
+        
+        -- If the player has a completely empty inventory
+        if not tool then
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "Error",
+                Text = "Get or buy any food first!",
+                Duration = 3
+            })
+            return
+        end
+        
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Universal Transmutation",
+            Text = "Using: " .. tool.Name .. ".\nClick an object on the map!",
+            Duration = 4
+        })
+        
+        local connection
+        connection = mouse.Button1Down:Connect(function()
+            local target = mouse.Target
+            
+            if target and target:IsA("BasePart") and target.Name ~= "Terrain" then
+                connection:Disconnect()
+                
+                local oldHandle = tool:FindFirstChild("Handle")
+                local eatingSound = nil
+                
+                -- If the old Handle exists, saves its sound (regardless of name) before deleting
+                if oldHandle then
+                    eatingSound = oldHandle:FindFirstChildWhichIsA("Sound")
+                    if eatingSound then
+                        eatingSound.Parent = tool
+                    end
+                    oldHandle:Destroy()
+                end
+                
+                if not eatingSound then
+                    eatingSound = tool:FindFirstChildWhichIsA("Sound")
+                end
+                
+                -- Clones the shape of the clicked object
+                local newHandle = target:Clone()
+                newHandle.Name = "Handle"
+                newHandle.CanCollide = false
+                newHandle.Anchored = false 
+                newHandle.CFrame = CFrame.new(0, 0, 0)
+                newHandle.Parent = tool
+                
+                -- Returns the original eating sound to the new Handle
+                if eatingSound then
+                    eatingSound.Parent = newHandle
+                end
+                
+                game:GetService("StarterGui"):SetCore("SendNotification", {
+                    Title = "Success! 🍽️",
+                    Text = "Object injected into: " .. tool.Name .. "! Re-equip the item.",
+                    Duration = 3
+                })
+            end
+        end)
+    end
+})
+
+DivertidasTab:AddButton({
+    Name = "Open Cat Army GUI",
+    Callback = function()
+    -- UPDATED GRAPHICAL INTERFACE (WITHOUT SYNTAX ERRORS)
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local TitleLabel = Instance.new("TextLabel")
+local BtnClose = Instance.new("TextButton")
+local ControlFrame = Instance.new("Frame")
+local BtnMinus = Instance.new("TextButton")
+local BtnPlus = Instance.new("TextButton")
+local QuantityLabel = Instance.new("TextLabel")
+
+-- CAT LIST SECTION
+local CatListFrame = Instance.new("Frame")
+local CatListTitle = Instance.new("TextLabel")
+local BtnCatButter = Instance.new("TextButton")
+local BtnCatBred = Instance.new("TextButton")
+local BtnCatCheese = Instance.new("TextButton")
+local BtnCatWhite = Instance.new("TextButton")
+
+-- MODE SELECTION SECTION
+local ModeFrame = Instance.new("Frame")
+local ModeTitle = Instance.new("TextLabel")
+local BtnModeHorizontal = Instance.new("TextButton")
+local BtnModeVertical = Instance.new("TextButton")
+local BtnStart = Instance.new("TextButton")
+
+-- MAIN WINDOW CONFIGURATION
+ScreenGui.Name = "CatArmyGuiV2"
+ScreenGui.Parent = game:GetService("CoreGui") or game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ResetOnSpawn = false
+
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+MainFrame.BorderSizePixel = 0
+MainFrame.Position = UDim2.new(0.05, 0, 0.3, 0)
+MainFrame.Size = UDim2.new(0, 240, 0, 420)
+MainFrame.Active = true
+MainFrame.Draggable = true
+Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 10)
+
+TitleLabel.Name = "TitleLabel"
+TitleLabel.Parent = MainFrame
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Position = UDim2.new(0, 10, 0, 0)
+TitleLabel.Size = UDim2.new(1, -50, 0, 40)
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.Text = "CAT ARMY"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 215, 0)
+TitleLabel.TextSize = 14
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+-- BUTTON TO DELETE THE GUI (X)
+BtnClose.Name = "BtnClose"
+BtnClose.Parent = MainFrame
+BtnClose.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
+BtnClose.Position = UDim2.new(1, -35, 0, 8)
+BtnClose.Size = UDim2.new(0, 25, 0, 25)
+BtnClose.Font = Enum.Font.GothamBold
+BtnClose.Text = "X"
+BtnClose.TextColor3 = Color3.fromRGB(255, 255, 255)
+BtnClose.TextSize = 14
+Instance.new("UICorner", BtnClose).CornerRadius = UDim.new(0, 5)
+
+BtnClose.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+-- QUANTITY SECTION (+ AND -)
+ControlFrame.Name = "ControlFrame"
+ControlFrame.Parent = MainFrame
+ControlFrame.BackgroundTransparency = 1
+ControlFrame.Position = UDim2.new(0, 10, 0, 45)
+ControlFrame.Size = UDim2.new(1, -20, 0, 45)
+
+BtnMinus.Parent = ControlFrame
+BtnMinus.BackgroundColor3 = Color3.fromRGB(180, 50, 50)
+BtnMinus.Size = UDim2.new(0, 35, 0, 35)
+BtnMinus.Font = Enum.Font.GothamBold
+BtnMinus.Text = "-"
+BtnMinus.TextColor3 = Color3.fromRGB(255, 255, 255)
+BtnMinus.TextSize = 20
+Instance.new("UICorner", BtnMinus).CornerRadius = UDim.new(0, 5)
+
+QuantityLabel.Parent = ControlFrame
+QuantityLabel.BackgroundTransparency = 1
+QuantityLabel.Position = UDim2.new(0, 45, 0, 0)
+QuantityLabel.Size = UDim2.new(1, -90, 0, 35)
+QuantityLabel.Font = Enum.Font.GothamBold
+QuantityLabel.Text = "Cats: 3"
+QuantityLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+QuantityLabel.TextSize = 16
+
+BtnPlus.Parent = ControlFrame
+BtnPlus.BackgroundColor3 = Color3.fromRGB(50, 160, 50)
+BtnPlus.Position = UDim2.new(1, -35, 0, 0)
+BtnPlus.Size = UDim2.new(0, 35, 0, 35)
+BtnPlus.Font = Enum.Font.GothamBold
+BtnPlus.Text = "+"
+BtnPlus.TextColor3 = Color3.fromRGB(255, 255, 255)
+BtnPlus.TextSize = 20
+Instance.new("UICorner", BtnPlus).CornerRadius = UDim.new(0, 5)
+
+-- MENU: CAT SPECIES SELECTION
+CatListFrame.Name = "CatListFrame"
+CatListFrame.Parent = MainFrame
+CatListFrame.BackgroundTransparency = 1
+CatListFrame.Position = UDim2.new(0, 10, 0, 95)
+CatListFrame.Size = UDim2.new(1, -20, 0, 140)
+
+CatListTitle.Parent = CatListFrame
+CatListTitle.BackgroundTransparency = 1
+CatListTitle.Size = UDim2.new(1, 0, 0, 20)
+CatListTitle.Font = Enum.Font.GothamSemibold
+CatListTitle.Text = "Choose Species:"
+CatListTitle.TextColor3 = Color3.fromRGB(200, 200, 200)
+CatListTitle.TextSize = 13
+CatListTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local function stylizeCatButton(btn, text, pos)
+    btn.Parent = CatListFrame
+    btn.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+    btn.Position = pos
+    btn.Size = UDim2.new(1, 0, 0, 24)
+    btn.Font = Enum.Font.Gotham
+    btn.Text = text
+    btn.TextColor3 = Color3.fromRGB(180, 180, 180)
+    btn.TextSize = 13
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 4)
+end
+
+stylizeCatButton(BtnCatButter, "Butter Cat", UDim2.new(0, 0, 0, 25))
+stylizeCatButton(BtnCatBred, "Bred Cat", UDim2.new(0, 0, 0, 53))
+stylizeCatButton(BtnCatCheese, "Cheese Cat", UDim2.new(0, 0, 0, 81))
+stylizeCatButton(BtnCatWhite, "White Cat", UDim2.new(0, 0, 0, 109))
+
+-- FORMATION SELECTION SECTION
+ModeFrame.Name = "ModeFrame"
+ModeFrame.Parent = MainFrame
+ModeFrame.BackgroundTransparency = 1
+ModeFrame.Position = UDim2.new(0, 10, 0, 245)
+ModeFrame.Size = UDim2.new(1, -20, 0, 90)
+
+ModeTitle.Parent = ModeFrame
+ModeTitle.BackgroundTransparency = 1
+ModeTitle.Size = UDim2.new(1, 0, 0, 20)
+ModeTitle.Font = Enum.Font.GothamSemibold
+ModeTitle.Text = "Line Formation:"
+ModeTitle.TextColor3 = Color3.fromRGB(200, 200, 200)
+ModeTitle.TextSize = 13
+ModeTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+BtnModeVertical.Parent = ModeFrame
+BtnModeVertical.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+BtnModeVertical.Position = UDim2.new(0, 0, 0, 25)
+BtnModeVertical.Size = UDim2.new(1, 0, 0, 26)
+BtnModeVertical.Font = Enum.Font.Gotham
+BtnModeVertical.Text = "Vertical Line"
+BtnModeVertical.TextColor3 = Color3.fromRGB(255, 255, 255)
+BtnModeVertical.TextSize = 13
+Instance.new("UICorner", BtnModeVertical).CornerRadius = UDim.new(0, 4)
+
+BtnModeHorizontal.Parent = ModeFrame
+BtnModeHorizontal.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+BtnModeHorizontal.Position = UDim2.new(0, 0, 0, 55)
+BtnModeHorizontal.Size = UDim2.new(1, 0, 0, 26)
+BtnModeHorizontal.Font = Enum.Font.Gotham
+BtnModeHorizontal.Text = "Horizontal Line (Lying Down)"
+BtnModeHorizontal.TextColor3 = Color3.fromRGB(180, 180, 180)
+BtnModeHorizontal.TextSize = 13
+Instance.new("UICorner", BtnModeHorizontal).CornerRadius = UDim.new(0, 4)
+-- MAIN START BUTTON
+BtnStart.Parent = MainFrame
+BtnStart.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
+BtnStart.Position = UDim2.new(0, 10, 1, -45)
+BtnStart.Size = UDim2.new(1, -20, 0, 35)
+BtnStart.Font = Enum.Font.GothamBold
+BtnStart.Text = "START ARMY"
+BtnStart.TextColor3 = Color3.fromRGB(35, 35, 45)
+BtnStart.TextSize = 14
+Instance.new("UICorner", BtnStart).CornerRadius = UDim.new(0, 6)
+
+
+-- SCRIPT LOGIC CONTROLLERS
+local catQuantity = 3
+local selectedMode = "Vertical"
+local selectedCat = "Butter Cat"
+
+local function resetCatListColors()
+    local gray = Color3.fromRGB(50, 50, 60)
+    local grayText = Color3.fromRGB(180, 180, 180)
+    BtnCatButter.BackgroundColor3 = gray; BtnCatButter.TextColor3 = grayText
+    BtnCatBred.BackgroundColor3 = gray; BtnCatBred.TextColor3 = grayText
+    BtnCatCheese.BackgroundColor3 = gray; BtnCatCheese.TextColor3 = grayText
+    BtnCatWhite.BackgroundColor3 = gray; BtnCatWhite.TextColor3 = grayText
+end
+
+local function selectCat(btn, name)
+    selectedCat = name
+    resetCatListColors()
+    btn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+end
+
+BtnCatButter.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+BtnCatButter.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+BtnCatButter.MouseButton1Click:Connect(function() selectCat(BtnCatButter, "Butter Cat") end)
+BtnCatBred.MouseButton1Click:Connect(function() selectCat(BtnCatBred, "Bred Cat") end)
+BtnCatCheese.MouseButton1Click:Connect(function() selectCat(BtnCatCheese, "Cheese Cat") end)
+BtnCatWhite.MouseButton1Click:Connect(function() selectCat(BtnCatWhite, "White Cat") end)
+
+BtnPlus.MouseButton1Click:Connect(function()
+    catQuantity = catQuantity + 1
+    QuantityLabel.Text = "Cats: " .. catQuantity
+end)
+
+BtnMinus.MouseButton1Click:Connect(function()
+    if catQuantity > 1 then
+        catQuantity = catQuantity - 1
+        QuantityLabel.Text = "Cats: " .. catQuantity
+    end
+end)
+
+BtnModeVertical.MouseButton1Click:Connect(function()
+    selectedMode = "Vertical"
+    BtnModeVertical.BackgroundColor3 = Color3.fromRGB(0, 120, 255); BtnModeVertical.TextColor3 = Color3.fromRGB(255, 255, 255)
+    BtnModeHorizontal.BackgroundColor3 = Color3.fromRGB(50, 50, 60); BtnModeHorizontal.TextColor3 = Color3.fromRGB(180, 180, 180)
+end)
+
+BtnModeHorizontal.MouseButton1Click:Connect(function()
+    selectedMode = "Horizontal"
+    BtnModeHorizontal.BackgroundColor3 = Color3.fromRGB(0, 120, 255); BtnModeHorizontal.TextColor3 = Color3.fromRGB(255, 255, 255)
+    BtnModeVertical.BackgroundColor3 = Color3.fromRGB(50, 50, 60); BtnModeVertical.TextColor3 = Color3.fromRGB(180, 180, 180)
+end)
+
+-- START BUTTON TRIGGER WITH THE CODE SECTION PROPERLY CLOSED
+BtnStart.MouseButton1Click:Connect(function()
+    local Players = game:GetService("Players")
+    local Workspace = game:GetService("Workspace")
+    local localPlayer = Players.LocalPlayer
+    local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+    local rootPart = character:WaitForChild("HumanoidRootPart")
+
+    for _, v in ipairs(Workspace:GetChildren()) do
+        if v.Name == "Cat_Army_GUI" then v:Destroy() end
+    end
+
+    local targetFolder = Workspace:FindFirstChild("build") and Workspace.build:FindFirstChild("private rooms")
+    if not targetFolder then return end
+
+    local originalModel = targetFolder:FindFirstChild(selectedCat)
+    if not originalModel then
+        warn("The cat '" .. selectedCat .. "' was not found in the private rooms folder!")
+        return
+    end
+
+    for i = 0, (catQuantity - 1) do
+        local clonedCat = originalModel:Clone()
+        clonedCat.Name = "Cat_Army_GUI"
+        
+        local catRoot = clonedCat:IsA("Model") and (clonedCat.PrimaryPart or clonedCat:FindFirstChildWhichIsA("BasePart")) or clonedCat
+        if not catRoot then continue end
+
+        local offsetX, offsetZ
+        
+        if selectedMode == "Vertical" then
+            local positionInLine = i % 3
+            local sideRowNumber = math.floor(i / 3)
+            offsetX = sideRowNumber * 2.5
+            offsetZ = 3 + (positionInLine * 3)
+        else
+            local horizontalPosition = i % 3
+            local backRow = math.floor(i / 3)
+            offsetX = (horizontalPosition - 1) * 2.5
+            offsetZ = 3 + (backRow * 3)
+        end
+
+        catRoot.CFrame = rootPart.CFrame * CFrame.new(offsetX, 0, offsetZ)
+        clonedCat.Parent = Workspace
+
+        for _, part in ipairs(clonedCat:GetDescendants()) do
+            if part:IsA("BasePart") then 
+                part.CanCollide = false 
+            end
+        end
+
+        local catAttachment = Instance.new("Attachment", catRoot)
+        local playerAttachment = Instance.new("Attachment", rootPart)
+        playerAttachment.Position = Vector3.new(offsetX, -1, offsetZ)
+
+        local alignment = Instance.new("AlignPosition")
+        alignment.MaxForce = 50000
+        alignment.Responsiveness = 15
+        alignment.Attachment0 = catAttachment
+        alignment.Attachment1 = playerAttachment
+        alignment.Parent = catRoot
+
+        local orientation = Instance.new("AlignOrientation")
+        orientation.MaxTorque = 50000
+        orientation.Responsiveness = 15
+        orientation.Attachment0 = catAttachment
+        orientation.Attachment1 = playerAttachment
+        orientation.Parent = catRoot
+    end
+
+    print("Army started with " .. catQuantity .. "x " .. selectedCat .. " in " .. selectedMode .. " formation")
+end)
+
+end
+})
+
+DivertidasTab:AddTextBox({
+    Name = "Type something: ",
+    Default = "",
+    PlaceholderText = "Write how many foods you will have (VISUAL)",
+    Callback = function(text)
+        Number = text
+    end
+})
+
+-- Creates the button that changes the value
+DivertidasTab:AddButton({
+    Name = "Get bites (VISUAL)",
+    Callback = function()
+        local path = game.Players.LocalPlayer:WaitForChild("leaderstats"):WaitForChild("Bites")
+
+        path.Value = Number
+    end
+})
+
+DivertidasTab:AddTextBox({
+    Name = "Type something: ",
+    Default = "",
+    PlaceholderText = "Write how much money you will have (VISUAL)",
+    Callback = function(text)
+        NumberH = text
+    end
+})
+
+-- Creates the button that changes the value
+DivertidasTab:AddButton({
+    Name = "Get money (VISUAL)",
+    Callback = function()
+        local pathH = game.Players.LocalPlayer:WaitForChild("leaderstats"):WaitForChild("Cash")
+
+        pathH.Value = NumberH
+    end
+})
+
+
+local UtilitiesTab = Window:MakeTab({
+    Name = "⚙️ Utilities",
+    Icon = "nil" -- Default icon
+})
+
+UtilitiesTab:AddButton({
+    Name = "Eat your first food from inventory (To reach global top)",
+    Callback = function()
+        local player = game:GetService("Players").LocalPlayer
+        local mouse = player:GetMouse()
+        local character = player.Character
+        local backpack = player:FindFirstChild("Backpack")
+        
+        -- 1. Finds any equipped tool in hand first
+        local tool = character and character:FindFirstChildWhichIsA("Tool")
+        
+        -- 2. If not in hand, gets the first tool from Backpack
+        if not tool and backpack then
+            tool = backpack:FindFirstChildWhichIsA("Tool")
+        end
+        
+        -- If the player's inventory is completely empty
+        if not tool then
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "Error",
+                Text = "Get or buy any food first!",
+                Duration = 3
+            })
+            return
+        end
+
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Auto Eating",
+            Text = "Using: " .. tool.Name .. " ok",
+            Duration = 4
+})
+
+local toless = tool.Name
+
+while wait(0) do
+       local args = {
+    {
+        CheesePull = false,
+        FoodType = "DrumStick",
+        Action = "Bite",
+        Tool = game:GetService("Players").LocalPlayer.Character:WaitForChild(toless),
+        Bite = 1
+    }
+}
+        local remote = ReplicatedStorage:WaitForChild("DrumstickEvent")
+        remote:FireServer(unpack(args))
+        end
+    end
+})
+
+UtilitiesTab:AddTextBox({
+    Name = "Type something: ",
+    Default = "",
+    PlaceholderText = "Write your speed",
+    Callback = function(texto)
+        NumeroJ = texto
+    end
+})
+
+
+UtilitiesTab:AddButton({
+    Name = "Set Walk Speed",
+    Callback = function()
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = NumeroJ
+    end
+})
+
+
+UtilitiesTab:AddTextBox({
+    Name = "Type something: ",
+    Default = "",
+    PlaceholderText = "Write your jump power",
+    Callback = function(texto)
+        NumeroW = texto
+    end
+})
+
+
+UtilitiesTab:AddButton({
+    Name = "Set Jump Power",
+    Callback = function()
+        game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid").JumpHeight = NumeroW
+    end
+})
+
+
+UtilitiesTab:AddTextBox({
+    Name = "Type something: ",
+    Default = "",
+    PlaceholderText = "Write your gravity",
+    Callback = function(texto)
+        NumeroP = texto
+    end
+})
+
+
+UtilitiesTab:AddButton({
+    Name = "Set Gravity",
+    Callback = function()
+        Workspace.Gravity = NumeroP
+    end
+})
+
+UtilitiesTab:AddButton({
+    Name = "Enable ESP",
+    Callback = function()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+
+        _G.ESP_Active = true
+
+        local function createHighlight(char)
+            if not char:FindFirstChild("ESPHighlight") then
+                local highlight = Instance.new("Highlight")
+                highlight.Name = "ESPHighlight"
+                highlight.FillColor = Color3.fromRGB(255, 0, 0)
+                highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+                highlight.FillTransparency = 0.5 -- Fixed here
+                highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                highlight.Parent = char
+            end
+        end
+
+        for _, player in ipairs(Players:GetPlayers()) do
+            if player ~= LocalPlayer and player.Character then
+                createHighlight(player.Character)
+            end
+        end
+
+        if not _G.ESP_Connected then
+            _G.ESP_Connected = true
+
+            Players.PlayerAdded:Connect(function(player)
+                player.CharacterAdded:Connect(function(char)
+                    task.wait(1)
+                    if _G.ESP_Active and player ~= LocalPlayer then
+                        createHighlight(char)
+                    end
+                end)
+            end)
+
+            for _, player in ipairs(Players:GetPlayers()) do
+                if player ~= LocalPlayer then
+                    player.CharacterAdded:Connect(function(char)
+                        task.wait(1)
+                        if _G.ESP_Active then 
+                            createHighlight(char) 
+                        end
+                    end)
+                end
+            end
+        end
+    end
+})
+
+
+UtilitiesTab:AddButton({
+    Name = "Disable ESP",
+    Callback = function()
+        local Players = game:GetService("Players")
+
+        _G.ESP_Active = false
+
+        for _, player in ipairs(Players:GetPlayers()) do
+            if player.Character and player.Character:FindFirstChild("ESPHighlight") then
+                player.Character.ESPHighlight:Destroy()
+            end
+        end
+    end
+})
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local function obterListaJogadores()
+    local lista = {}
+
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            table.insert(lista, player.Name)
+        end
+    end
+
+    return lista
+end
+
+local PlayerDropdown = UtilitiesTab:AddDropdown({
+    Name = "Player List",
+    Options = obterListaJogadores(),
+    Default = "",
+    Callback = function(Value)
+        jogadorSelecionado = Value
+    end
+})
+
+UtilitiesTab:AddButton({"Shaders", function()
+    local Lighting = game:GetService("Lighting")
+    local RunService = game:GetService("RunService")
+
+    -- Keeps the beautiful shadow technology
+    Lighting.Technology = Enum.Technology.Future
+    Lighting.ShadowSoftness = 0.1
+    Lighting.EnvironmentDiffuseScale = 1
+    Lighting.EnvironmentSpecularScale = 1
+    Lighting.GlobalShadows = true
+
+    -- Clears old effects to avoid stacking
+    for _, effect in pairs(Lighting:GetChildren()) do
+        if effect:IsA("PostEffect") or effect:IsA("Atmosphere") or effect:IsA("Sky") then
+            effect:Destroy()
+        end
+    end
+
+    -- 1. Soft Atmosphere
+    local Atmosphere = Instance.new("Atmosphere")
+    Atmosphere.Density = 0.25
+    Atmosphere.Offset = 0.15
+    Atmosphere.Color = Color3.fromRGB(240, 220, 190)
+    Atmosphere.Decay = Color3.fromRGB(230, 170, 120)
+    Atmosphere.Glare = 0.35
+    Atmosphere.Haze = 1.1
+    Atmosphere.Parent = Lighting
+
+    -- 2. Balanced Color Correction
+    local ColorCorrection = Instance.new("ColorCorrectionEffect")
+    ColorCorrection.Brightness = 0.05
+    ColorCorrection.Contrast = 0.15
+    ColorCorrection.Saturation = 0.15
+    ColorCorrection.Parent = Lighting
+
+    -- 3. Controlled Bloom
+    local Bloom = Instance.new("BloomEffect")
+    Bloom.Intensity = 0.8
+    Bloom.Size = 24
+    Bloom.Threshold = 0.75
+    Bloom.Parent = Lighting
+
+    -- 4. Elegant Sun Rays
+    local SunRays = Instance.new("SunRaysEffect")
+    SunRays.Intensity = 0.2
+    SunRays.Spread = 0.6
+    SunRays.Parent = Lighting
+
+    -- 5. Cinematic Depth Blur
+    local DepthOfField = Instance.new("DepthOfFieldEffect")
+    DepthOfField.FarIntensity = 0.3
+    DepthOfField.FocusDistance = 40
+    DepthOfField.InFocusRadius = 50
+    DepthOfField.NearIntensity = 0.05
+    DepthOfField.Parent = Lighting
+
+    -- Keeps the visual stable
+    RunService.RenderStepped:Connect(function()
+        Lighting.Brightness = 2.8
+        Lighting.ExposureCompensation = 0.2
+        Lighting.OutdoorAmbient = Color3.fromRGB(130, 140, 150)
+        Lighting.Ambient = Color3.fromRGB(45, 45, 50)
+    end)
+end})
+
+
+UtilitiesTab:AddButton({
+    Name = "🔄 Refresh Player List",
+    Callback = function()
+        PlayerDropdown:Refresh(obterListaJogadores(), true)
+    end
+})
+
+
+UtilitiesTab:AddToggle({
+    Name = "Player Camera View",
+    Default = false,
+    Callback = function(Value)
+        espectando = Value
+        local camera = Workspace.CurrentCamera
+        
+        if espectando then
+            local target = Players:FindFirstChild(jogadorSelecionado)
+            if target and target.Character and target.Character:FindFirstChild("Humanoid") then
+                camera.CameraSubject = target.Character.Humanoid
+                
+                conexaoEspectar = target.CharacterAdded:Connect(function(newCharacter)
+                    local humanoid = newCharacter:WaitForChild("Humanoid", 5)
+                    if humanoid and espectando then
+                        camera.CameraSubject = humanoid
+                    end
+                end)
+            else
+                print("Select a valid player from the list before activating.")
+            end
+        else
+            if conexaoEspectar then
+                conexaoEspectar:Disconnect()
+                conexaoEspectar = nil
+            end
+            
+            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+                camera.CameraSubject = LocalPlayer.Character.Humanoid
+            end
+        end
+    end
+})
+
+
+UtilitiesTab:AddToggle({
+    Name = "Teleport to Players",
+    Default = false,
+    Callback = function(Value)
+        if Value then
+            local target = Players:FindFirstChild(jogadorSelecionado)
+            local myRoot = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            local targetRoot = target and target.Character and target.Character:FindFirstChild("HumanoidRootPart")
+            
+            if myRoot and targetRoot then
+                myRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 2, 0)
+            end
+        end
+    end
+})
+
+
+local InfiniteJumpEnabled = false
+local JumpConnection = nil
+
+UtilitiesTab:AddToggle({"Infinite Jump", false, function(Value)
+    InfiniteJumpEnabled = Value
+    
+    -- Activates only when enabled
+    if InfiniteJumpEnabled and not JumpConnection then
+        local UserInputService = game:GetService("UserInputService")
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+
+        JumpConnection = UserInputService.JumpRequest:Connect(function()
+            if InfiniteJumpEnabled then
+                local character = LocalPlayer.Character
+                if character then
+                    local humanoid = character:FindFirstChildOfClass("Humanoid")
+                    if humanoid then
+                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                    end
+                end
+            end
+        end)
+    end
+end})
+
+local NewTab = Window:MakeTab({
+    Name = "✉️ Updates",
+    Icon = "Cred" -- Default icon
+})
+
+NewTab:AddParagraph({
+    Title = "New foods added to the food dropdown"
+})
+
+NewTab:AddParagraph({
+    Title = "That's it for today, more coming soon"
+})
+
+
+local CredTab = Window:MakeTab({
+    Name = "✉️ Credits",
+    Icon = "Cred" -- Default icon
+})
+
+CredTab:AddParagraph({
+    Title = "Creator: Juan"
+})
+
+CredTab:AddParagraph({
+    Title = "Tools Used: Dex, Infinite Yield, Pastefy, WeAreDevs, Solarar V3 and Simple Spy"
+})
+
+CredTab:AddParagraph({
+    Title = "Language: Englis"
+})
+
+CredTab:AddParagraph({
+    Title = "I hope you enjoy the Hub :)"
+})
+    ScreenGui:Destroy()
+end)
